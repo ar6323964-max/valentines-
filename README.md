@@ -1,4 +1,4 @@
-[index.html.html](https://github.com/user-attachments/files/24989748/index.html.html)
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -121,11 +121,11 @@
             Official Valentine Status: Active ✅
         </div>
         
-        <h1 class="text-4xl font-serif italic font-bold gradient-text">Thank you, Api! 💖</h1>
+        <h1 class="text-4xl font-serif italic font-bold gradient-text">Thank you, KABAB! 💖</h1>
         
         <div class="letter-scroll max-h-[450px] overflow-y-auto pr-2 text-left space-y-6 mt-6">
             <p class="text-gray-200 leading-relaxed handwritten text-3xl">
-                My Dearest Api, 🌸
+                My RUBAB, 🌸
             </p>
             <p class="text-gray-300 leading-relaxed text-lg">
                 I just wanted to take a second to tell you how much you mean to me. 🧸 I know I call you "crusty" sometimes, but honestly? You’re the most amazing part of my day. ✨
@@ -141,7 +141,7 @@
             </p>
             <p class="text-pink-400 font-bold handwritten text-4xl pt-4">
                 Love you forever, 💋 <br>
-                [DUA API] 🏹
+                [RUBAB] 🏹
             </p>
         </div>
 
