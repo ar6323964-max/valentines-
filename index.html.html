@@ -6,155 +6,166 @@
     <title>For My Favorite Person</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Pacifico&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --primary: #ff4d6d;
-            --bg: #0a0a0c;
+            --accent: #ffb3c1;
         }
-
         body {
-            background-color: var(--bg);
-            color: #ffffff;
+            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 100%);
+            min-height: 100vh;
+            color: #4a4a4a;
             font-family: 'Inter', sans-serif;
             overflow-x: hidden;
             margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
+        .cute-font { font-family: 'Fredoka One', cursive; }
+        .handwritten { font-family: 'Pacifico', cursive; }
 
         .glass {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 2px solid #ffffff;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+            border-radius: 30px;
         }
 
-        .gradient-text {
-            background: linear-gradient(45deg, #ff4d6d, #ff8fa3);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .handwritten {
-            font-family: 'Dancing Script', cursive;
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .heart-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            pointer-events: none;
-            opacity: 0.2;
-        }
-
-        #no-button {
-            transition: all 0.15s ease;
-        }
-
-        .letter-scroll::-webkit-scrollbar {
-            width: 4px;
-        }
-        .letter-scroll::-webkit-scrollbar-thumb {
-            background: rgba(255, 77, 109, 0.3);
+        .photo-card {
+            background: white;
+            padding: 12px 12px 30px 12px;
             border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
+        .photo-card img {
+            filter: grayscale(100%) brightness(40%);
+            transition: all 0.6s ease;
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        .photo-card.revealed { transform: scale(1.1) rotate(0deg) !important; z-index: 10; border: 2px solid #ff4d6d; }
+        .photo-card.revealed img { filter: grayscale(0%) brightness(100%); }
+        .photo-card .caption { 
+            font-size: 1.1rem; 
+            margin-top: 8px; 
+            color: #ff4d6d; 
+            opacity: 0; 
+            transition: opacity 0.4s;
+        }
+        .photo-card.revealed .caption { opacity: 1; }
+
+        .pulse-btn { animation: pulse-soft 2s infinite; }
+        @keyframes pulse-soft {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        #no-button { transition: all 0.2s ease; position: relative; }
+        .heart-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
-
+<body class="p-4">
     <canvas id="heartCanvas" class="heart-bg"></canvas>
 
-    <div id="step-1" class="max-w-md w-full glass p-8 text-center space-y-6 reveal active">
-        <h2 class="text-sm uppercase tracking-[0.3em] text-gray-400">February 14, 2026</h2>
-        <h1 class="text-4xl font-bold font-serif italic">Hey, Api. 👋</h1>
-        <p class="text-gray-300 leading-relaxed">
-            I have a very important question for you... 🤫
+    <div id="step-1" class="max-w-md w-full glass p-10 text-center space-y-6 reveal active shadow-2xl">
+        <div class="text-xs uppercase tracking-[0.3em] text-pink-500 font-bold mb-2">February 14, 2026</div>
+        <h1 class="text-5xl cute-font text-rose-500">ELOOOO DUAAAA! 🌹</h1>
+        <p class="text-gray-600 leading-relaxed text-lg">
+            I have something special to ask you... <br>
+            <span class="text-sm italic text-gray-500">(Promise me you won't laugh)</span>
         </p>
-        <button onclick="nextStep(2)" class="px-8 py-3 bg-white text-black rounded-full font-semibold hover:scale-105 transition-all">
-            Unlock Message 🔓
+        <button onclick="nextStep(2)" class="px-8 py-3 bg-rose-500 text-white rounded-full cute-font text-xl hover:bg-rose-600 transition-all shadow-lg pulse-btn">
+            Open Letter 💌
         </button>
     </div>
 
-    <div id="step-2" class="max-w-lg w-full glass p-10 text-center space-y-8 hidden">
-        <div class="floating text-6xl">💝</div>
-        <h1 class="text-4xl md:text-5xl font-bold leading-tight">
-            Will you be my <span class="gradient-text">Valentine?</span>
+    <div id="step-2" class="max-w-lg w-full glass p-12 text-center space-y-8 hidden relative">
+        <div class="text-7xl">💝</div>
+        <h1 class="text-5xl cute-font text-rose-600">
+            Will you be my <br>Valentine?
         </h1>
-        <p class="text-gray-400 italic">No is not an option (I've made sure of it) 🎀</p>
-        
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
-            <button onclick="celebrate()" class="px-10 py-4 bg-white text-black rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] transition-all">
+        <p class="text-pink-400 handwritten text-2xl">Bhag kr khn jao gi... 😉</p>
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center mt-8">
+            <button onclick="celebrate()" class="px-12 py-4 bg-rose-500 text-white rounded-full cute-font text-2xl hover:bg-rose-600 shadow-xl transition-all">
                 YES! 💍
             </button>
-            <button id="no-button" onmouseover="moveNoButton()" class="px-10 py-4 border border-white/20 rounded-full font-semibold">
-                No 🏃‍♀️💨
+            <button id="no-button" onmouseover="moveNoButton()" onclick="moveNoButton()" class="px-10 py-4 border-2 border-rose-300 text-rose-500 rounded-full cute-font text-lg hover:bg-rose-50">
+                No 💔
             </button>
         </div>
     </div>
 
-    <div id="step-3" class="max-w-2xl w-full glass p-8 md:p-12 text-center space-y-6 hidden">
-        <div class="inline-block px-4 py-1 rounded-full border border-pink-500/30 text-pink-400 text-xs font-bold tracking-widest uppercase mb-4">
-            Official Valentine Status: Active ✅
+    <div id="step-3" class="max-w-3xl w-full glass p-8 md:p-14 text-center space-y-6 hidden overflow-y-auto max-h-[90vh]">
+        <div class="inline-block px-5 py-2 rounded-full bg-rose-100 text-rose-600 text-xs font-bold tracking-widest uppercase mb-4">
+            Status: She Said Yes! ✨
         </div>
+        <h1 class="text-4xl md:text-5xl cute-font text-rose-500">Thank you, Duaaaaa! 💖</h1>
         
-        <h1 class="text-4xl font-serif italic font-bold gradient-text">Thank you, Api! 💖</h1>
+        <p class="text-gray-500 italic">Tap the photos to reveal our memories...</p>
         
-        <div class="letter-scroll max-h-[450px] overflow-y-auto pr-2 text-left space-y-6 mt-6">
-            <p class="text-gray-200 leading-relaxed handwritten text-3xl">
-                My Dearest Api, 🌸
-            </p>
-            <p class="text-gray-300 leading-relaxed text-lg">
-                I just wanted to take a second to tell you how much you mean to me. 🧸 I know I call you "crusty" sometimes, but honestly? You’re the most amazing part of my day. ✨
-            </p>
-            <p class="text-gray-300 leading-relaxed text-lg font-semibold border-l-2 border-pink-500 pl-4 italic">
-                They always say that <span class="text-pink-400">"R" letter people are the absolute BEST</span> and it’s totally true. 👸 You have this way of staying forever in someone's heart once you're there. ♾️💖 
-            </p>
-            <p class="text-gray-300 leading-relaxed text-lg">
-                Thank you for being my person, for the endless laughs 😂, and for staying by my side through everything. Life is just better with you in it. 🌈☁️
-            </p>
-            <p class="text-gray-300 leading-relaxed text-lg">
-                Let's make some more chaotic memories together! 🥂🔥
-            </p>
-            <p class="text-pink-400 font-bold handwritten text-4xl pt-4">
-                Love you forever, 💋 <br>
-                [DUA API] 🏹
-            </p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(-3deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/615928456_885604371056897_7840498945104485338_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=109&ccb=7-5&_nc_sid=0024fc&_nc_ohc=qK8Uu0GGndwQ7kNvwFtgohw&_nc_oc=AdkgcPxgNOu3fxLrehMIo3j8sJmziOTshpSIYuH7xoLJkiMebKFpMWAfxg7YZH17M90&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gHQogG_EY5lwx4ZJ8OQPSMrxjoIbEEwsYWN3B8ZqPiuCQ&oe=69AB3C01">
+                <p class="handwritten caption">BHONDUU! 🥧</p>
+            </div>
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(2deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/626167331_1694868918161636_8244500642416389481_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=111&ccb=7-5&_nc_sid=0024fc&_nc_ohc=auTu0Hnlzz8Q7kNvwEoBWuy&_nc_oc=AdnOw_ejzJ5Ssd4gCzpfgV92YKR8xrtN5qcivR8283WKWewrsQ3PvwWTMRfMcvK5Uqk&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gF1q4yk0TZ9-8d8Isnn_kX82x7gLVR15AF_6RHtAClqXw&oe=69AB1751">
+                <p class="handwritten caption">MERA BACHAA 🌍</p>
+            </div>
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(-2deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/623778645_2192359888257226_2024939328019291290_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=104&ccb=7-5&_nc_sid=0024fc&_nc_ohc=a1RkivMTmKEQ7kNvwEk4CeJ&_nc_oc=AdmGZloJjqLoZ4uHiaOMbpyVgB6v7LTqnoNQO8apCLqlmunxugK2bCMVy6bF7E6vvUE&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gGH61nxWH03sF0wyV5785cDylmZM-Zq-6CevGQt3eUXgg&oe=69AB3443">
+                <p class="handwritten caption">Awww cutie pie! 🥰</p>
+            </div>
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(4deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/622480832_1408249380762588_3862780255008577928_n.jpg?stp=dst-jpg_s480x480_tt6&_nc_cat=104&ccb=7-5&_nc_sid=0024fc&_nc_ohc=YXKMcICMHngQ7kNvwFckLln&_nc_oc=AdkgptjIiFDImJHxdYmQ6xccdFR8_OwynqG1SWHs2GPU__9iFUxjtNVQwJ66ps7MnrA&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gE-l3EH-pa0euaAsHWEaD1cayMibgDETA66PxeY8PfwFQ&oe=69AB4B82">
+                <p class="handwritten caption">Pagallll</p>
+            </div>
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(-3deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/613325993_1864159504471099_2578195040317287396_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=111&ccb=7-5&_nc_sid=0024fc&_nc_ohc=6XWDhhJkZp8Q7kNvwGG5ryP&_nc_oc=AdlyFtD3jWbt_hMmqFVpnfjYvAVtEN_b9hB-z57dQcEpBzQARopxZjywiM7FIZ9TeYE&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gFVhw-EKdCjw8lAVLFgw5q1cE03uCpXdcI-KRF9H5Cs5Q&oe=69AB4613">
+                <p class="handwritten caption">Krlun Kidnap ! 🍭</p>
+            </div>
+            <div class="photo-card" onclick="revealPhoto(this)" style="transform: rotate(1deg);">
+                <img src="https://instagram.fkhi28-1.fna.fbcdn.net/v/t1.15752-9/622600896_1780509882623548_255730906361353626_n.jpg?stp=dst-jpg_p480x480_tt6&_nc_cat=110&ccb=7-5&_nc_sid=0024fc&_nc_ohc=sBgKrfxjviYQ7kNvwHZTS8V&_nc_oc=AdkMw81m6clgv86L1ICRuyQnIHgJl6zOhY-TBOJSaDN-cQ7pJK2nFz4bCYZlQKC1kKE&_nc_zt=23&_nc_ht=instagram.fkhi28-1.fna&oh=03_Q7cD4gHXRrw2FhUMLD6lsg9mqdeDCIEvLQ6jfppEcJxtcrOxoQ&oe=69AB3372">
+                <p class="handwritten caption">Nice Beard! ✨</p>
+            </div>
         </div>
 
-        <div class="pt-8 border-t border-white/10 mt-6">
-            <p class="text-gray-500 text-xs tracking-tighter uppercase">Created with ❤️ just for you</p>
+        <div class="text-left space-y-6 mt-10 p-4 border-t border-rose-200">
+            <p class="text-rose-500 cute-font text-3xl">Hello Duaaaaaaa umwah! 👋</p>
+            <p class="text-gray-700 text-lg">
+                Chintu ke papa aj kl bhot pretty pretty laag rahe, mera asr to nahe ye 😍 
+            </p>
+            <div class="bg-rose-50 p-6 rounded-2xl italic text-gray-600 border-l-8 border-rose-400">
+                They say that <span class="font-bold text-rose-500 cute-font">"R" letter people</span> are the ones who leave the biggest mark on your heart. acha vo na tumein zara sikana tha ke lipgloss sahe se kese lagate hein to zara time nikalao tumein sikaon 😭 
+            </div>
+            <p class="text-gray-700 text-lg">
+                Thank you for being my person, for the chaos, and for simply existing. adam khan charsiiiiii buahhhaahhahaha. 🌈
+            </p>
+            <p class="text-rose-500 handwritten text-5xl pt-6 text-right">
+                Love always, <br>
+                [Duaaaaaaaaaaaaa] 🏹
+            </p>
         </div>
     </div>
 
     <script>
         function nextStep(step) {
-            const current = document.querySelector('.active') || document.getElementById('step-2');
+            const current = document.querySelector('.active');
             current.style.opacity = '0';
             current.style.transform = 'translateY(-20px)';
-            
             setTimeout(() => {
                 current.classList.add('hidden');
                 current.classList.remove('active');
@@ -170,12 +181,22 @@
 
         function moveNoButton() {
             const btn = document.getElementById('no-button');
-            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 50);
-            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 50);
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth - 100);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight - 100);
+            const safeX = Math.max(20, Math.min(x, window.innerWidth - 150));
+            const safeY = Math.max(20, Math.min(y, window.innerHeight - 100));
+            
             btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
+            btn.style.left = safeX + 'px';
+            btn.style.top = safeY + 'px';
             btn.style.zIndex = '1000';
+            
+            const texts = ["Really?", "Try Again!", "No way!", "Pakdo mujhe!", "Nopsie!"];
+            btn.innerText = texts[Math.floor(Math.random() * texts.length)];
+        }
+
+        function revealPhoto(card) {
+            card.classList.add('revealed');
         }
 
         function celebrate() {
@@ -186,11 +207,9 @@
                     particleCount: Math.floor(count * particleRatio)
                 }));
             }
-            fire(0.25, { spread: 26, startVelocity: 55 });
-            fire(0.2, { spread: 60 });
+            fire(0.25, { spread: 26, startVelocity: 55, colors: ['#ff4d6d', '#ffb3c1'] });
+            fire(0.2, { spread: 60, colors: ['#ff4d6d', '#ffffff'] });
             fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
-            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
-            fire(0.1, { spread: 120, startVelocity: 45 });
             nextStep(3);
         }
 
@@ -203,21 +222,20 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = canvas.height + 20;
-                this.size = Math.random() * 10 + 2;
-                this.speed = Math.random() * 1.5 + 0.5;
-                this.opacity = Math.random() * 0.4;
+                this.size = Math.random() * 15 + 10;
+                this.speed = Math.random() * 1 + 0.5;
+                this.opacity = Math.random() * 0.4 + 0.1;
             }
-            update() { this.y -= this.speed; if (this.y < -20) this.reset(); }
+            update() { this.y -= this.speed; if (this.y < -50) this.reset(); }
             draw() {
-                ctx.fillStyle = `rgba(255, 77, 109, ${this.opacity})`;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.globalAlpha = this.opacity;
+                ctx.font = `${this.size}px serif`;
+                ctx.fillText("💖", this.x, this.y);
             }
         }
         function init() {
             resize();
-            for (let i = 0; i < 50; i++) hearts.push(new Heart());
+            for (let i = 0; i < 20; i++) hearts.push(new Heart());
             animate();
         }
         function animate() {
